@@ -15,5 +15,8 @@
     "terser": "^5.36.0"
   },
   "author": "GenZZ-Coders",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
 }
