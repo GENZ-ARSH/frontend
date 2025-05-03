@@ -1,0 +1,47 @@
+# Node.js/Yarn
+node_modules/
+yarn.lock
+package-lock.json
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Build Artifacts
+dist/
+build/
+
+# Temporary Files
+*.log
+*.cache
+.DS_Store
+Thumbs.db
+
+# Editor/IDE Files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Sensitive Data
+*.pem
+*.key
+*.cert
+*.pfx
+
+# Local Development
+coverage/
+tmp/
+temp/
+
+# Other
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
