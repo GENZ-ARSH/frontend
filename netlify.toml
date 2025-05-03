@@ -1,17 +1,12 @@
 [build]
-  # Directory where your files are (root folder)
   base = "/"
-  # Publish directory (where your HTML/JS files are)
-  publish = "/"
-  # No build command needed since no build step (plain HTML/JS)
-  command = ""
+  publish = "dist/"
+  command = "yarn build"
 
 [dev]
-  # Local dev port (optional)
   port = 8888
 
 [[redirects]]
-  # Redirect all unknown routes to index.html (for SPA-like behavior, if needed)
   from = "/*"
   to = "/index.html"
   status = 200
