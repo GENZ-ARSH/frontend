@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GENZZ-LIBRARY | Generate Key</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Glowing Bubbles */
+    .background-animation {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .snowball {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      from {
+        transform: translateY(-10vh);
+      }
+      to {
+        transform: translateY(110vh);
+      }
+    }
+
+    /* Glassmorphism Box */
+    .glass-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .glass-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 40px rgba( 31, 38, 135, 0.5 );
+    }
+
+    /* Heading */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #00dbde, #fc00ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Button Style */
+    .btn {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      border: none;
+      padding: 15px 20px;
+      margin: 10px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.4s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #6a11cb, 0 0 30px #2575fc;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+      transform: translate(-50%, -50%) scale(0);
+      transition: 0.4s ease;
+      border-radius: 50%;
+    }
+
+    .btn:hover::before {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Loading Message */
+    #loadingMessage {
+      display: none;
+      font-size: 1rem;
+      margin-top: 20px;
+      color: #00ffe7;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background-animation"></div>
+
+  <div class="glass-box">
+    <h1>Generate Key</h1>
+    <button id="server02" class="btn">Server 1</button>
+    <button id="server03Url" class="btn">Server 2</button>
+    <button id="recommendServer" class="btn">Recommended Server</button>
+    <button id="watchVideo" class="btn">Watch Tutorial</button>
+    <p id="loadingMessage">Generating Key... Please wait.</p>
+  </div>
+
+  <script>
+    const urls = {
+      server02: 'http://linkcents.com/gPwlEJy1',
+      server03: 'http://linkcents.com/gPwlEJy1',
+      recommendServer: 'http://linkcents.com/gPwlEJy1',
+      tutorialVideo: ''
+    };
+
+    function setTemporaryCookieAndRedirect(cookieName, url) {
+      if (!url) return alert('Invalid URL!');
+      document.getElementById("loadingMessage").style.display = "block";
+      setTimeout(() => {
+        document.cookie = `${cookieName}=true; path=/; max-age=${6 * 60 * 60}`;
+        window.open(url, '_blank');
+      }, 2000);
+    }
+
+    document.getElementById('server02').addEventListener('click', () => setTemporaryCookieAndRedirect('server02KeyGenerated', urls.server02));
+    document.getElementById('server03Url').addEventListener('click', () => setTemporaryCookieAndRedirect('server03KeyGenerated', urls.server03));
+    document.getElementById('recommendServer').addEventListener('click', () => setTemporaryCookieAndRedirect('recommendServerKeyGenerated', urls.recommendServer));
+    document.getElementById('watchVideo').addEventListener('click', () => window.open(urls.tutorialVideo, '_blank'));
+
+    function getCookie(name) {
+      return document.cookie.split('; ').some(cookie => cookie.startsWith(name + '='));
+    }
+
+    if (getCookie('server02KeyGenerated') || getCookie('server03KeyGenerated') || getCookie('recommendServerKeyGenerated')) {
+      window.location.href = "mainpage.html";
+    }
+
+    // Snowball animation
+    function createSnowball() {
+      const snowball = document.createElement("div");
+      snowball.classList.add("snowball");
+      document.querySelector(".background-animation").appendChild(snowball);
+      let size = Math.random() * 8 + 4;
+      snowball.style.width = `${size}px`;
+      snowball.style.height = `${size}px`;
+      snowball.style.left = `${Math.random() * 100}vw`;
+      snowball.style.animationDuration = `${Math.random() * 5 + 5}s`;
+      setTimeout(() => { snowball.remove(); }, 10000);
+    }
+
+    setInterval(createSnowball, 150);
+  </script>
+
+</body>
+</html>

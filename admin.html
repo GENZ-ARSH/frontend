@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'nonce-xyz' https://cdn.jsdelivr.net https://telegram.org https://www.googletagmanager.com;
+        style-src 'self' 'nonce-xyz' https://fonts.googleapis.com;
+        img-src 'self' data: https://*.cloudfront.net https://*.amazon.com https://via.placeholder.com https://imagedelivery.net https://booksfy.in https://imgv2-2-f.scribdassets.com https://freeimage.host;
+        connect-src 'self' https://genzz-backend.onrender.com https://linkcent.in https://freeimage.host;
+        font-src 'self' https://fonts.gstatic.com;
+        media-src 'self' https://static.vecteezy.com;
+    ">
+    <title>GenZZ Library - Admin Panel</title>
+    <link rel="icon" href="./assets/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js" nonce="xyz"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" nonce="xyz"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.1/dist/purify.min.js" nonce="xyz"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR-ID" nonce="xyz"></script>
+    <script nonce="xyz">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YOUR-ID'); // Replace with your actual Google Analytics ID
+    </script>
+    <script src="./js/admin.js" defer nonce="xyz"></script>
+    <style nonce="xyz">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1e1e1e, #2a3b8a);
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        header {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container img {
+            width: 160px;
+            height: 60px;
+        }
+        .flex-space-x-4 {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        main {
+            flex-grow: 1;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        .admin-section {
+            max-width: 800px;
+            width: 100%;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            color: #ffffff;
+        }
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Poppins', sans-serif;
+            color: #d1d5db;
+        }
+        .admin-form, .books-list {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .admin-form:hover, .book-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #d1d5db;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            background: #1e1e1e;
+            color: #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+        }
+        .form-group .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .form-group .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 400;
+            color: #d1d5db;
+        }
+        .form-group .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 0.3rem;
+        }
+        #cover-preview {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .btn-submit, .btn-logout, .btn-access, .btn-delete, .btn-bulk-delete {
+            display: inline-block;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(90deg, #facc15, #f97316);
+            color: #1e40af;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit:hover, .btn-logout:hover, .btn-access:hover, .btn-delete:hover, .btn-bulk-delete:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #eab308, #ea580c);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.5);
+        }
+        .btn-submit::before, .btn-logout::before, .btn-access::before, .btn-delete::before, .btn-bulk-delete::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+        .btn-submit:hover::before, .btn-logout:hover::before, .btn-access:hover::before, .btn-delete:hover::before, .btn-bulk-delete:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+        .btn-delete, .btn-bulk-delete {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.875rem;
+        }
+        .books-list {
+            margin-top: 2rem;
+        }
+        .book-item {
+            background: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .book-item img {
+            width: 80px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .book-item div {
+            flex-grow: 1;
+        }
+        .book-item h5 {
+            font-size: 1.125rem;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: #ffffff;
+        }
+        .book-item p {
+            margin: 0.25rem 0;
+            color: #a3a3a3;
+        }
+        .book-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .filter-group input, .filter-group select {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+            background: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #f97316;
+            box-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+        }
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        #chatbot-button {
+            background: linear-gradient(90deg, #facc15, #f97316);
+            color: #1e40af;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        #chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.5);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        #chatbot-window {
+            display: none;
+            width: 360px;
+            height: 500px;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        #chatbot-window.active {
+            transform: scale(1.02);
+        }
+        #chatbot-header {
+            background: linear-gradient(90deg, #facc15, #f97316);
+            color: #1e40af;
+            padding: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        #chatbot-messages {
+            flex-grow: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+        }
+        #chatbot-input {
+            display: flex;
+            border-top: 1px solid #4b5563;
+        }
+        #chatbot-input input {
+            flex-grow: 1;
+            border: none;
+            padding: 12px;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            color: #ffffff;
+        }
+        #chatbot-input input:focus {
+            outline: none;
+        }
+        #chatbot-input button {
+            background: linear-gradient(90deg, #facc15, #f97316);
+            color: #1e40af;
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        #chatbot-input button:hover {
+            background: linear-gradient(90deg, #eab308, #ea580c);
+        }
+        .chatbot-message {
+            margin: 6px 0;
+            padding: 10px;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.95rem;
+        }
+        .chatbot-message.bot {
+            background: #f97316;
+            color: #ffffff;
+            margin-left: auto;
+        }
+        .chatbot-message.user {
+            background: #4b5563;
+            color: #ffffff;
+            margin-right: auto;
+        }
+        footer {
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            color: #a3a3a3;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #f97316;
+        }
+        @media (max-width: 600px) {
+            .admin-section {
+                padding: 1rem;
+            }
+            #chatbot-window {
+                width: 100%;
+                right: 0;
+                bottom: 0;
+                border-radius: 15px 15px 0 0;
+            }
+            .filter-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script nonce="xyz">
+        // Initialize tsParticles for background dots
+        if (window.matchMedia('(min-device-pixel-ratio: 2)').matches) {
+            tsParticles.load('particles-js', {
+                particles: {
+                    number: { value: 50 },
+                    color: { value: '#60a5fa' },
+                    shape: { type: 'circle' },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    move: { enable: true, speed: 1, direction: 'none', random: true }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo-container">
+                    <img src="./assets/logo.png" alt="GenZZ Library Logo">
+                </div>
+                <div class="flex-space-x-4">
+                    <a href="https://t.me/genzcoders1" class="btn-access text-sm" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-chat-dots-fill mr-1"></i> Join Gen-Z Channel 🚀
+                    </a>
+                    <button id="logout" class="btn-logout">Logout</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="admin-section">
+            <h2>Admin Panel 📚</h2>
+            <div class="admin-form">
+                <h3>Add New Book</h3>
+                <form id="book-form">
+                    <div class="form-group">
+                        <label for="title">Book Title</label>
+                        <input type="text" id="title" placeholder="Enter book title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <input type="text" id="author" placeholder="Enter author name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cover Image Option</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="cover-option" value="file" checked> Upload File (JPG/PNG, <5MB)</label>
+                            <label><input type="radio" name="cover-option" value="url"> Provide URL</label>
+                        </div>
+                        <div id="cover-file-group">
+                            <input type="file" id="cover" accept="image/jpeg,image/png">
+                        </div>
+                        <div id="cover-url-group" style="display: none;">
+                            <input type="url" id="cover-url" placeholder="Enter cover image URL">
+                        </div>
+                        <img id="cover-preview" alt="Cover Preview">
+                    </div>
+                    <div class="form-group">
+                        <label for="pdfLink">PDF Link (Google Drive)</label>
+                        <input type="url" id="pdfLink" placeholder="Enter Google Drive shareable link" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Class</label>
+                        <select id="class" required>
+                            <option value="">Select Class</option>
+                            <option value="all">All</option>
+                            <option value="10th">10th</option>
+                            <option value="11th">11th</option>
+                            <option value="12th">12th</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exam">Exam</label>
+                        <select id="exam" required>
+                            <option value="">Select Exam</option>
+                            <option value="all">All</option>
+                            <option value="Board">Board</option>
+                            <option value="JEE">JEE</option>
+                            <option value="NEET">NEET</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Add Book</button>
+                </form>
+            </div>
+            <div class="books-list">
+                <h3>Existing Books</h3>
+                <div class="filter-group">
+                    <input type="text" id="search-books" placeholder="Search by title or author">
+                    <select id="filter-class">
+                        <option value="">Filter by Class</option>
+                        <option value="all">All</option>
+                        <option value="10th">10th</option>
+                        <option value="11th">11th</option>
+                        <option value="12th">12th</option>
+                    </select>
+                    <select id="filter-exam">
+                        <option value="">Filter by Exam</option>
+                        <option value="all">All</option>
+                        <option value="Board">Board</option>
+                        <option value="JEE">JEE</option>
+                        <option value="NEET">NEET</option>
+                    </select>
+                    <button id="bulk-delete" class="btn-bulk-delete" style="display: none;">Delete Selected</button>
+                </div>
+                <div id="books-container">
+                    <!-- Books will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="chatbot-container">
+        <button id="chatbot-button">
+            <i class="bi bi-chat-dots-fill" style="font-size: 24px;"></i>
+        </button>
+        <div id="chatbot-window" style="display: none; flex-direction: column;">
+            <div id="chatbot-header">GenZZ Admin Bot 😎</div>
+            <div id="chatbot-messages"></div>
+            <div id="chatbot-input">
+                <input type="text" id="chatbot-input-text" placeholder="Type your query...">
+                <button id="chatbot-input-button">Send</button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-links">
+            <a href="https://t.me/genzcoders1" target="_blank" rel="noopener noreferrer">Join Telegram</a>
+            <a href="https://github.com/genzz-library" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="/cdn-cgi/l/email-protection#390a0c0909160b0d391e1c17030315101b0b180b00571a1614">Contact Us</a>
+        </div>
+        <p>Made with ❤️ by GenZZ-Coders</p>
+    </footer>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9396cc35d832bff1',t:'MTc0NjE4MTM0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
